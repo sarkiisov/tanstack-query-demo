@@ -22,7 +22,7 @@ export const queries = mergeQueryKeys(
 const defaultQueryFn: QueryFunction = ({ queryKey }) => {
   const [basePath, , axiosRequestParams] = queryKey as DefaultQueryKey
 
-  api({
+  return api({
     url: path.join(basePath, axiosRequestParams.path || ''),
     ...axiosRequestParams
   })
