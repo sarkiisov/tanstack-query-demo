@@ -4,31 +4,12 @@ import path from 'path-browserify'
 import { api } from './axios'
 import { createQueryKeys, mergeQueryKeys } from '@lukemorales/query-key-factory'
 
-const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
-  const [basePath, , axiosRequestParams] = queryKey as [
-    string,
-    string,
-    AxiosRequestConfig & { path?: string }
-  ]
-
-  try {
-    const data = await api({
-      ...axiosRequestParams,
-      url: path.join(basePath, axiosRequestParams.path || '')
-    })
-    return await Promise.resolve(data.data)
-  } catch (error) {
-    return Promise.reject(error)
-  }
-}
-
-export const queryClient = new QueryClient({
-  defaultOptions: { queries: { queryFn: defaultQueryFn, retry: 1 } }
-})
+export type DefaultQueryKey = [string, string, AxiosRequestConfig & { path?: string }]
 
 const usersQueryKeys = createQueryKeys('users', {
-  findMany: () => [{}],
-  find: (id: string) => [{ path: id }]
+  findMany: () => [{}], // -> ["users", "findMany", {}]
+  find: (id: string) => [{ path: id }], // -> ["users", "find", { path: id }]
+  findManyAttributes: () => [{ url: 'usersAttributes' }] // -> ["users", "findManyAttributes", { url: "usersAttributes" }]
 })
 
 // const othersQueryKeys = createQueryKeys("others", ...)
@@ -37,3 +18,16 @@ export const queries = mergeQueryKeys(
   usersQueryKeys
   // othersQueryKeys
 )
+
+const defaultQueryFn: QueryFunction = ({ queryKey }) => {
+  const [basePath, , axiosRequestParams] = queryKey as DefaultQueryKey
+
+  api({
+    url: path.join(basePath, axiosRequestParams.path || ''),
+    ...axiosRequestParams
+  })
+}
+
+export const queryClient = new QueryClient({
+  defaultOptions: { queries: { queryFn: defaultQueryFn, retry: 1 } }
+})
