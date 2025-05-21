@@ -10,6 +10,7 @@ export const UserView = () => {
   const navigate = useNavigate()
 
   const { data: user, isLoading, isError, error } = useFindUser(id)
+
   const deleteUserMutation = useDeleteUser()
 
   const handleDeleteUser = async (user: User) => {
