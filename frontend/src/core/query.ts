@@ -8,8 +8,8 @@ export type DefaultQueryKey = [string, string, AxiosRequestConfig & { path?: str
 
 const usersQueryKeys = createQueryKeys('users', {
   findMany: () => [{}], // -> ["users", "findMany", {}]
-  find: (id: string) => [{ path: id }], // -> ["users", "find", { path: id }]
-  findManyAttributes: () => [{ url: 'usersAttributes' }] // -> ["users", "findManyAttributes", { url: "usersAttributes" }]
+  find: (id: string) => [{ path: id }] // -> ["users", "find", { path: id }]
+  // findManyAttributes: () => [{ url: 'usersAttributes' }] // -> ["users", "findManyAttributes", { url: "usersAttributes" }]
 })
 
 // const othersQueryKeys = createQueryKeys("others", ...)

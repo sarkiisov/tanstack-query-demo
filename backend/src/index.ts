@@ -6,7 +6,7 @@ import cors from "cors";
 
 const app = express();
 
-app.use(delayMiddleware(200));
+app.use(delayMiddleware(300));
 app.use(express.json());
 app.use(cors());
 
