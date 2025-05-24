@@ -19,13 +19,13 @@ export const queries = mergeQueryKeys(
   // othersQueryKeys
 )
 
-const defaultQueryFn: QueryFunction = ({ queryKey }) => {
+const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
   const [basePath, , axiosRequestParams] = queryKey as DefaultQueryKey
 
-  return api({
+  return await api({
     url: path.join(basePath, axiosRequestParams.path || ''),
     ...axiosRequestParams
-  })
+  }).then(({ data }) => data)
 }
 
 export const queryClient = new QueryClient({
